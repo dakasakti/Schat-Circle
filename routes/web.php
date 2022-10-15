@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use Illuminate\Auth\Events\Login;
-use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,10 +13,6 @@ use App\Http\Controllers\DashboardController;
 |
 */
 
-Route::get('/',[LoginController::class,'SignIn'])->middleware('guest');
-Route::get('/sign-out',[LoginController::class,'SignOut'])->middleware('guest');
-
-Route::post('/',[LoginController::class,'StoreSignIn'])->middleware('guest');
-Route::post('/sign-out',[LoginController::class,'StoreLogin'])->middleware('guest');
-
-Route::get('/home',[DashboardController::class,'index'])->middleware('auth');
+Route::get('/', function () {
+    return view('welcome');
+});
