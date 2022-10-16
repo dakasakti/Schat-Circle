@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\chatting;
 
 class User extends Authenticatable
 {
@@ -18,9 +19,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'username',
         'password',
+        'jenis_kelamin',
+        'NoHp'
     ];
 
     /**
@@ -32,6 +34,8 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+   
 
     /**
      * The attributes that should be cast.
