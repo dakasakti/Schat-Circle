@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\User;
 
 
 class LoginController extends Controller
@@ -18,20 +19,22 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'username' => 'required',
             'password' => 'required'
         ]);
-
-        if(Auth::attempt(['username' => $request->username , 'password' => $request->password])) {
-            //dd(Auth()->check($credentials));
-
+        
+        $user = User::where('username', $request->username)->first();
+        
+        if($user && Hash::check($request->password, $user->password)) {
+            Auth::login($user);
             $request->session()->regenerate();
             
             return redirect()->intended('/dashboard');
-            
+        } else {
+            // wrong user or password
         }
-
+        
         return redirect('login')->with('failedLogin', 'Login failed!');
     }
 
