@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\User;
-
 
 class LoginController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
+    }
+
     public function index()
     {
         return view('conten.login.login', [
@@ -19,33 +22,27 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
-        $request->validate([
+        $credentials = $request->validate([
             'username' => 'required',
             'password' => 'required'
         ]);
-        
-        $user = User::where('username', $request->username)->first();
-        
-        if($user && Hash::check($request->password, $user->password)) {
-            Auth::login($user);
+
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            
-            return redirect()->intended('/dashboard');
-        } else {
-            // wrong user or password
+
+            return redirect()->intended('dashboard');
         }
-        
+
         return redirect('login')->with('failedLogin', 'Login failed!');
     }
 
-    public function logout()
+    public function logout(Request $req)
     {
         Auth::logout();
 
-        request()->session()->invalidate();
+        $req->session()->invalidate();
+        $req->session()->regenerateToken();
 
-        request()->session()->regenerateToken();
-
-        return redirect('/');
+        return to_route('login');
     }
 }

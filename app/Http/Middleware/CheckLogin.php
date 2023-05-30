@@ -16,9 +16,8 @@ class CheckLogin
      */
     public function handle(Request $request, Closure $next)
     {
-        dd(auth()->user());
-        if(!auth()->user()){
-        
+        if (!auth()->user()) {
+
             return redirect()->route('login');
         }
 

@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('guest');
+    }
+
     public function index()
     {
         return view('conten.login.index', [
@@ -19,19 +23,13 @@ class RegisterController extends Controller
     public function store(Request $request)
     {
         $validasiRegister = $request->validate([
-            'username' => ['required','unique:Users','max:255','min:5'],
-            'password' => ['required','unique:Users','min:5','max:255']
+            'username' => ['required', 'unique:Users', 'max:255', 'min:5'],
+            'password' => ['required', 'confirmed', 'min:5', 'max:255'],
+            'password_confirmation' => 'required'
         ]);
 
-        if($validasiRegister['password'] == $request->konfirmasi){
-            $validasiRegister['password'] = hash::make($validasiRegister['password']);
-            User::create($validasiRegister);
-        }
-
-        // $validatedData['password'] = bcrypt($validatedData['password']);
-
-
-        // $request->session()->flash('success', 'Registration successfull! Please login');
+        $validasiRegister['password'] = bcrypt($validasiRegister['password']);
+        User::create($validasiRegister);
 
         return redirect('/login')->with('success', 'Registration successfull! Please login');
     }

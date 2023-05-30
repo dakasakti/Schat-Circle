@@ -27,5 +27,12 @@ class DatabaseSeeder extends Seeder
             'jenis_kelamin' => 'laki-laki',
             'NoHp' => '0831390193'
         ]);
+
+        User::create([
+            'username' => 'example',
+            'password' => bcrypt('example'),
+            'jenis_kelamin' => 'laki-laki',
+            'NoHp' => '0831390193'
+        ]);
     }
 }

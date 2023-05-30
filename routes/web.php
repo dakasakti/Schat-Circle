@@ -1,11 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RegisterController;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\DashboardController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,20 +17,22 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 |
 */
 
+route::get("/", function () {
+    return view('welcome');
+});
 
+Route::controller(RegisterController::class)->group(function () {
+    Route::get('/register', 'index')->name('register');
+    Route::post('/register', 'store')->name('validRegister');
+});
 
-Route::group(['middleware' => ['guest']],function(){
-    Route::get('/', [RegisterController::class, 'index'])->name('register');
-    Route::post('/', [RegisterController::class, 'store'])->name('validRegister');
-    Route::get('/login', [LoginController::class, 'index'])->name('login');
-    Route::post('/login', [LoginController::class, 'authenticate'])->name('authLogin');
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
+Route::controller(LoginController::class)->group(function () {
+    Route::get('login', 'index')->name('login');
+    Route::post('login', 'authenticate')->name('authLogin');
+    Route::post('logout', 'logout')->name('logout');
 });
 
 
-Route::get('/dashboard',[DashboardController::class,'index'])->middleware('auth');
-
-
-
-
+Route::controller(DashboardController::class)->group(function () {
+    Route::get('dashboard', 'index')->name('dashboard');
+});
